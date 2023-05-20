@@ -48,8 +48,6 @@
   tasks:
     - name: Download Coolify
       ansible.builtin.command: wget -q https://get.coollabs.io/coolify/install.sh -O /install.sh
-    # - name: Install Coolify
-    #   ansible.builtin.script: /install.sh
 
 - hosts: openstack
   tasks:
@@ -62,9 +60,14 @@
       template:
         src: local.conf
         dest: /devstack/local.conf
-        owner: stack
-        group: stack
-        mode: "0644"
+        owner: root
+        group: root
+        mode: "0777"
+    - name: Set Permissions
+      shell: |
+        chown -R <username> devstack
+        chmod 770 devstack
+      become: true
 
 
 # When the script finished add the following command for the tools to continue installment
