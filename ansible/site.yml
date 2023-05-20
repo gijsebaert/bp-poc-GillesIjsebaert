@@ -1,0 +1,82 @@
+---
+- hosts: all
+  tasks:
+    - name: Install aptitude
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: true
+    - name: Install required system packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+          - curl
+          - htop
+        state: latest
+        update_cache: true
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+    - name: Update apt and install docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+    - name: add script to VM
+      template:
+        src: collectData.sh
+        dest: /collectData.sh
+        owner: root
+        group: root
+        mode: "0777"
+
+- hosts: coolify
+  tasks:
+    - name: Download Coolify
+      ansible.builtin.command: wget -q https://get.coollabs.io/coolify/install.sh -O /install.sh
+    # - name: Install Coolify
+    #   ansible.builtin.script: /install.sh
+
+- hosts: openstack
+  tasks:
+    - name: Deploy OpenStack
+      shell: |
+        cd /
+        git clone https://opendev.org/openstack/devstack
+        cd /devstack
+    - name: Create Configfile
+      template:
+        src: local.conf
+        dest: /devstack/local.conf
+        owner: stack
+        group: stack
+        mode: "0644"
+
+
+# When the script finished add the following command for the tools to continue installment
+#      vagrant ssh openstack
+#      /devstack/stack.sh
+#
+#      vagrant ssh openstack
+#      /install.sh
+
+
+# Use the following script to collect the proof of concept data 
+#      add the PID in the script for openstack or the coolify service
+#      for Coolify find the docker container PID with the following command:
+#               docker inspect --format {{.State.Pid}} [container-id]
+#      ./collectData.sh [PID]

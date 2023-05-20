@@ -1,0 +1,19 @@
+# vagrant_hosts.yml
+#
+# List of hosts to be created by Vagrant. For more information about the
+# possible settings, see the documentation at
+# <https://github.com/bertvv/ansible-skeleton>
+---
+- name: coolify
+  ip: 192.168.56.10
+  memory: 4092
+  forwarded_ports:
+    - guest: 3000
+      host: 3000
+
+- name: openstack
+  ip: 192.168.56.11
+  memory: 4092
+  forwarded_ports:
+    - guest: 80
+      host: 80
