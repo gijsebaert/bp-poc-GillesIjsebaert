@@ -1,3 +1,4 @@
+"time","pid","cpu","ram","process"
 14:03:30,139839,90.6, 6.9,qemu-system-x86
 14:03:31,139839,90.7, 7.3,qemu-system-x86
 14:03:32,139839,89.2, 7.4,qemu-system-x86
