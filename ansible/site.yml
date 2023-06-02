@@ -60,13 +60,13 @@
       template:
         src: local.conf
         dest: /devstack/local.conf
-        owner: root
-        group: root
+        owner: vagrant
+        group: vagrant
         mode: "0777"
     - name: Set Permissions
       shell: |
-        chown -R <username> devstack
-        chmod 770 devstack
+        chown -R vagrant /devstack
+        chmod 770 /devstack
       become: true
 
 
